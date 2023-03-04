@@ -1,41 +1,102 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable } from "svelte/store";
-  import { get } from "svelte/store";
-  import type  { Message } from "../../types/Message";
+  import {
+    collection,
+    query,
+    onSnapshot,
+    doc,
+    arrayUnion,
+    setDoc,
+  } from "firebase/firestore";
+  import type { Message } from "../../types/Message";
+  import type { Match } from "../../types/Match";
+  import { db } from "$lib/firebase";
 
   import UserProfile from "../../components/UserProfile.svelte";
+  import ChatButton from "../../components/ChatButton.svelte";
   import MessagingContent from "../../components/MessagingContent.svelte";
 
   let messageValue: string;
   let messages: Message[];
   let container: HTMLDivElement;
+  let uid: string = "eZslI0Kmwnm4f6bZYNUq";
+  let selectedChat: string = "Ty7FnLqr1NwiNAFi752S";
+  // uid = "Ty7FnLqr1NwiNAFi752S";
+  // selectedChat = "eZslI0Kmwnm4f6bZYNUq";
 
-  function sendMessage()
-  {
-    console.log("clicked")
-    if (messageValue.length > 0)
-    {
-      messages.push(
-      {
-        "timestamp": Date.now().toString(),
-        "to": messageValue
-      }
-      )
-      messages = messages
-      messageValue = ""
-      container.scrollTop = container.scrollHeight
-      
+  let matches: Match[] = [];
+
+  onMount(async () => {
+    let userMessages = collection(db, `users/${uid}/messages`);
+    let messagesQuery = query(userMessages);
+    onSnapshot(messagesQuery, (snapshot) => {
+      matches = [];
+      snapshot.docChanges().forEach((change) => {
+        let tmp = change.doc.data() as Match;
+        matches.push({
+          id: change.doc.id,
+          name: tmp.name,
+          imgSrc: tmp.imgSrc,
+          messages: tmp.messages,
+        });
+
+        if (selectedChat === change.doc.id) {
+          messages = tmp.messages as Message[];
+        }
+        container.scrollTop = container.scrollHeight;
+      });
+    });
+  });
+
+  function sendMessage() {
+    // Update my messages
+    let msgRef = doc(db, `users/${uid}/messages/${selectedChat}`);
+    if (messageValue.length > 0) {
+      setDoc(
+        msgRef,
+        {
+          messages: arrayUnion({
+            timestamp: Date.now().toString(),
+            to: messageValue,
+          }),
+        },
+        { merge: true }
+      );
+    }
+
+    // Update other user's messages
+    let otherRef = doc(db, `users/${selectedChat}/messages/${uid}`);
+    if (messageValue.length > 0) {
+      setDoc(
+        otherRef,
+        {
+          messages: arrayUnion({
+            timestamp: Date.now().toString(),
+            from: messageValue,
+          }),
+        },
+        { merge: true }
+      );
     }
   }
 
-  const onKeyPress = e => {
+  const onKeyPress = (e) => {
     if (e.charCode === 13) sendMessage();
-  }
+  };
 </script>
 
 <div class="container">
-  <div class="sidebar" />
+  <div class="sidebar">
+    {#each matches as match}
+      <ChatButton
+        name={match.name}
+        imgSrc={match.imgSrc}
+        id={match.id}
+        lastMessage="Hello"
+        bind:selectedChat
+      />
+    {/each}
+  </div>
   <div class="col">
     <UserProfile
       name="John Doe"
@@ -44,13 +105,19 @@
     <MessagingContent bind:messages bind:container />
     <div class="inputBar">
       <textarea
-      on:keypress={onKeyPress}
-      placeholder="Type your message here..."
-      bind:value={messageValue}
-    />
-    <button on:click={sendMessage} class="msgBtn">
-      <img class="msgIcon" width="70px" height="70px" src="https://icon-library.com/images/send-message-icon-png/send-message-icon-png-24.jpg" alt="paper_plane">
-    </button>
+        on:keypress={onKeyPress}
+        placeholder="Type your message here..."
+        bind:value={messageValue}
+      />
+      <button on:click={sendMessage} class="msgBtn">
+        <img
+          class="msgIcon"
+          width="70px"
+          height="70px"
+          src="https://icon-library.com/images/send-message-icon-png/send-message-icon-png-24.jpg"
+          alt="paper_plane"
+        />
+      </button>
     </div>
   </div>
 </div>
@@ -70,6 +137,7 @@
 
   .sidebar {
     display: flex;
+    flex-direction: column;
     gap: 0px;
     width: 320px;
     background-color: #202020;
@@ -102,17 +170,16 @@
     margin-top: 10px;
   }
 
-  .msgBtn{
+  .msgBtn {
     border: none;
     margin-left: 10px;
     margin-top: 10px;
     background-color: #202020;
     border-radius: 1em;
     outline: none;
-  }  
-
-  .msgIcon{
-    filter: invert(60%);
   }
 
+  .msgIcon {
+    filter: invert(60%);
+  }
 </style>

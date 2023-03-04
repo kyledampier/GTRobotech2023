@@ -1,4 +1,11 @@
 {
-    "API_KEY" : "dE5EhtYkc7BZbHxUuxAyJ5WOxd2OZcVWUAenpZSRslaX80btw4reL8DMi9mJwBtR",
-    "MONGO_URL": "mongodb+srv://server:sII89rmeR88miRPB@minfulmatching.cp4bxnc.mongodb.net/?retryWrites=true&w=majority"
+    "FIREBASE_CONFIG": {
+        "apiKey": "AIzaSyDA4i4KN_YmZUwIDxxyD4L5DlsT6CFY8qU",
+        "authDomain": "mindfulchat-e5de3.firebaseapp.com",
+        "projectId": "mindfulchat-e5de3",
+        "storageBucket": "mindfulchat-e5de3.appspot.com",
+        "messagingSenderId": "241231562869",
+        "appId": "1:241231562869:web:7ed8ef33aad6717849103c",
+        "measurementId": "G-ESZX2F4F23"
+      }
 }
