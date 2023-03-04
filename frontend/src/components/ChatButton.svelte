@@ -2,6 +2,7 @@
   export let lastMessage: string;
   export let name: string;
   export let imgSrc: string;
+  export let id: string;
   export let selectedChat;
 </script>
 

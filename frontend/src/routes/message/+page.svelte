@@ -1,7 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { collection, query, where, onSnapshot } from "firebase/firestore";
+  import {
+    collection,
+    query,
+    onSnapshot,
+    doc,
+    arrayUnion,
+    setDoc,
+  } from "firebase/firestore";
   import type { Message } from "../../types/Message";
+  import type { Match } from "../../types/Match";
   import { db } from "$lib/firebase";
 
   import UserProfile from "../../components/UserProfile.svelte";
@@ -12,60 +20,63 @@
   let messages: Message[];
   let container: HTMLDivElement;
   let uid: string = "eZslI0Kmwnm4f6bZYNUq";
+  let selectedChat: string = "Ty7FnLqr1NwiNAFi752S";
+  // uid = "Ty7FnLqr1NwiNAFi752S";
+  // selectedChat = "eZslI0Kmwnm4f6bZYNUq";
 
-  let selectedChat: string;
-
-  let matches = [
-    {
-      id: "abc123",
-      name: "John Doe",
-      imgSrc:
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Lion_waiting_in_Namibia.jpg/440px-Lion_waiting_in_Namibia.jpg",
-    },
-    {
-      id: "abc123",
-      name: "John Doe",
-      imgSrc:
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Lion_waiting_in_Namibia.jpg/440px-Lion_waiting_in_Namibia.jpg",
-    },
-  ];
+  let matches: Match[] = [];
 
   onMount(async () => {
     let userMessages = collection(db, `users/${uid}/messages`);
     let messagesQuery = query(userMessages);
-    onSnapshot(messagesQuery, (snapshot: { docChanges: () => any[]; }) => {
+    onSnapshot(messagesQuery, (snapshot) => {
+      matches = [];
       snapshot.docChanges().forEach((change) => {
-        console.log(change.doc.id);
-        if (change.type === "added") {
-          console.log("New message: ", change.doc.data());
+        let tmp = change.doc.data() as Match;
+        matches.push({
+          id: change.doc.id,
+          name: tmp.name,
+          imgSrc: tmp.imgSrc,
+          messages: tmp.messages,
+        });
+
+        if (selectedChat === change.doc.id) {
+          messages = tmp.messages as Message[];
         }
-        if (change.type === "modified") {
-          console.log("Modified message: ", change.doc.data());
-        }
-        if (change.type === "removed") {
-          console.log("Removed message: ", change.doc.data());
-        }
+        container.scrollTop = container.scrollHeight;
       });
     });
   });
 
   function sendMessage() {
+    // Update my messages
+    let msgRef = doc(db, `users/${uid}/messages/${selectedChat}`);
     if (messageValue.length > 0) {
-      messages.push({
-        timestamp: Date.now().toString(),
-        to: messageValue,
-      });
-      messages = messages;
-      messageValue = "";
-      container.scrollTop = container.scrollHeight;
-      messages.push(
-      {
-        "timestamp": Date.now().toString(),
-        "to": messageValue
-      }
-      )
-      messages = messages
-      messageValue = ""
+      setDoc(
+        msgRef,
+        {
+          messages: arrayUnion({
+            timestamp: Date.now().toString(),
+            to: messageValue,
+          }),
+        },
+        { merge: true }
+      );
+    }
+
+    // Update other user's messages
+    let otherRef = doc(db, `users/${selectedChat}/messages/${uid}`);
+    if (messageValue.length > 0) {
+      setDoc(
+        otherRef,
+        {
+          messages: arrayUnion({
+            timestamp: Date.now().toString(),
+            from: messageValue,
+          }),
+        },
+        { merge: true }
+      );
     }
     container.scrollTo({top: container.scrollHeight})
   }
@@ -81,6 +92,7 @@
       <ChatButton
         name={match.name}
         imgSrc={match.imgSrc}
+        id={match.id}
         lastMessage="Hello"
         bind:selectedChat
       />
