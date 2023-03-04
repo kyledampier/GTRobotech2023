@@ -13,10 +13,10 @@ app = FastAPI()
 def index():
     return {"Hello": "World"}
 
-@app.get("/get_uuid")
-def generate_uuid():
-    #! this makes a new user in the db
-    return make_uuid()
+# @app.get("/get_uuid")
+# def generate_uuid():
+#     #! this makes a new user in the db
+#     return make_uuid()
 
 @app.get("/submit_form")
 async def update_user_data(request: Request):
