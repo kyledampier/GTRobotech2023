@@ -1,5 +1,5 @@
-<script>
-  import Counter from "../components/Counter.svelte";
+<script lang="ts">
+  import VideoSource from "../components/VideoSource.svelte";
 
   export let data;
   console.log(data);
@@ -7,9 +7,8 @@
   let count = 0;
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<h2>{count}</h2>
+<h1>Form Evaluator</h1>
 
-<Counter bind:count />
+<h3>Test</h3>
 
-<!-- <pre>{data ?? "No Data"}</pre> -->
+<VideoSource />
