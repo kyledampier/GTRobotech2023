@@ -40,13 +40,13 @@
 </div>
 
 <div class="form">
-    <input type=radio class="radio-lg" name="scale" bind:group={selected} value={1} on:change={onChange}>
-    <input type=radio class="radio-md" name="scale" bind:group={selected} value={2} on:change={onChange}>
-    <input type=radio class="input-3" name="scale" bind:group={selected} value={3} on:change={onChange}>
-    <input type=radio class="input-4" name="scale" bind:group={selected} value={4} on:change={onChange}>
-    <input type=radio class="input-5" name="scale" bind:group={selected} value={5} on:change={onChange}>
-    <input type=radio class="radio-md" name="scale" bind:group={selected} value={6} on:change={onChange}>
-    <input type=radio class="radio-lg" name="scale" bind:group={selected} value={7} on:change={onChange}>
+    <input type=radio class="radio-lg pink" name="scale" bind:group={selected} value={1} on:change={onChange}>
+    <input type=radio class="radio-md pink" name="scale" bind:group={selected} value={2} on:change={onChange}>
+    <input type=radio class="radio-sm pink" name="scale" bind:group={selected} value={3} on:change={onChange}>
+    <input type=radio class="radio-ne gray" name="scale" bind:group={selected} value={4} on:change={onChange}>
+    <input type=radio class="radio-sm green" name="scale" bind:group={selected} value={5} on:change={onChange}>
+    <input type=radio class="radio-md green" name="scale" bind:group={selected} value={6} on:change={onChange}>
+    <input type=radio class="radio-lg green" name="scale" bind:group={selected} value={7} on:change={onChange}>
 </div>
 
 <div class="footer">
@@ -57,10 +57,17 @@
     .container {
         display: flex;
         justify-content: center;
+        align-items: flex-start;
+    }
+
+    h1 {
+        max-width: 75vw;
+        text-align: center;
     }
     p {
         font-size: 135%;
         padding-right: 10px;
+        justify-content: left;
     }
     input[type=radio] {
         -webkit-appearance: none;
@@ -73,11 +80,8 @@
         right: 0;
         bottom: 0;
         left: 0;
-        height: 40px;
-        width: 40px;
         transition: all 0.15s ease-out 0s;
         background: #373737;
-        border: 2px solid;
         cursor: pointer;
         display: inline-block;
         margin-right: 0.5rem;
@@ -86,20 +90,41 @@
         z-index: 1000;
         border-radius: 50%;
     }
-
     .radio-lg {
-        
+        height: 50px;
+        width: 50px;
     }
     .radio-md {
-        
+        height: 42px;
+        width: 42px;
+    }
+    .radio-sm {
+        height: 34px;
+        width: 34px;
+    }
+    .radio-ne {
+        height: 25px;
+        width: 25px;
+    }
+    .pink {
+        border: solid #B804B1;
+    }
+    .green {
+        border: solid #69FF51;
+    }
+    .gray {
+        border: solid gray;
     }
     .form {
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     progress {
 		display: block;
 		width: 100%;
-        background-color: #373737;
+        border: none;
+        background-color: #635f5f;
 	}
     progress::-webkit-progress-value {
         background-color: rgba(105, 255, 81, .75);
