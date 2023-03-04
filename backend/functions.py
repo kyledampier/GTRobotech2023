@@ -10,6 +10,7 @@ import json
 word_generator = RandomWord()
 animal_directory = os.getcwd() + "\pfps\\"
 
+
 def make_uuid():
     uid = str(uuid.uuid4())
     #allocate space for this data in the db

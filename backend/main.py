@@ -5,9 +5,20 @@ import uuid
 import io
 from functions import *
 from fastapi import Response, Request
+from starlette.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
+
+origins = ["http://localhost:5173", "*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def index():
@@ -18,7 +29,7 @@ def index():
 #     #! this makes a new user in the db
 #     return make_uuid()
 
-@app.get("/submit_form")
+@app.post("/submit_form")
 async def update_user_data(request: Request):
     #* given a user's form data,
     user_data = await request.json()

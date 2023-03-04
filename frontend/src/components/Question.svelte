@@ -7,18 +7,39 @@
     import { survey } from '../lib/init.json';
     import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
+    import { writable } from "svelte/store";
+    import { onMount } from "svelte";
+    import {v4 as uuidv4} from 'uuid';
 
     let selected;
     let index = 0;
     let total = 20;
     let question = survey[index].question;
+    
+    let path = "http://localhost:8000/";
+    let uid = uuidv4();
 
     const progress = tweened(0, {
         duration: 400,
         easing: cubicOut
     });
 
+    async function sendData() {
+        const res = await fetch(path + 'submit_form', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+            body: JSON.stringify({
+                uid,
+                survey
+            })
+        })
+        const json = await res.json();
+        result = JSON.stringify(json)
+    }
+
     function onChange() {
+        survey[index].answer = selected;
+
         if (index != 19) {
             if (selected !== null) {
                 index += 1;
@@ -28,6 +49,7 @@
             progress.set(index/total);
         } else {
             progress.set(100);
+            sendData();
             // reroute
         }
     }
