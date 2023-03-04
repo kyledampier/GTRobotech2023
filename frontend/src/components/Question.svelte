@@ -7,9 +7,9 @@
     import { survey } from '../lib/init.json';
     import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
-    import { writable } from "svelte/store";
-    import { onMount } from "svelte";
     import {v4 as uuidv4} from 'uuid';
+	import { redirect } from "@sveltejs/kit";
+	import { goto } from "$app/navigation";
 
     let selected;
     let index = 0;
@@ -50,7 +50,7 @@
         } else {
             progress.set(100);
             sendData();
-            // reroute
+            goto('/message');
         }
     }
 

@@ -124,5 +124,5 @@ def simulate_user_answers(num_users=10, num_questions=20):
         user_dict[str(uuid.uuid4())] = {"form_data":np.random.randint(low=1, high=7, size=(20)).tolist(), "available_to_chat":1}
     
     return user_dict
-fake_users = simulate_user_answers(2)
-store_users(fake_users)
+# fake_users = simulate_user_answers(2)
+# store_users(fake_users)
