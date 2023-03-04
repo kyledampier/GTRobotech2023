@@ -1,7 +1,10 @@
 <script lang="ts">
   import { uid } from "$lib/example_messages.json";
+  import type  { Message } from "../types/Message";
 
-  const messages = [
+  export let container: HTMLDivElement;
+
+  export let messages: Message[] = [
     {
       timestamp: "2009-11-10T22:00:00Z",
       from: "some message",
@@ -23,7 +26,7 @@
   //   console.log(uid);
 </script>
 
-<div class="expand">
+<div class="expand" id="msgDisplay" bind:this={container}>
   {#each messages as message}
     {#if "to" in message}
       <p class="to">{message.to}</p>
@@ -38,11 +41,10 @@
   div {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    justify-content: flex-end;
-    /* height: 120px; */
+    flex-wrap: nowrap;
     width: calc(100vw - 320px - 2em);
     border-bottom: 1px solid #828282;
+    overflow-y: scroll;
   }
 
   .to {
@@ -69,6 +71,6 @@
 
   .expand {
     flex: 1;
-    overflow: scroll;
+    overflow-y: scroll;
   }
 </style>
