@@ -8,7 +8,6 @@
 </script>
 
 <h1>Form Evaluator</h1>
-
 <h3>Test</h3>
 
 <VideoSource />

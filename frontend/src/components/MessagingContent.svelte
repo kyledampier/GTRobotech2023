@@ -20,7 +20,7 @@
     },
   ];
 
-  console.log(uid);
+  //   console.log(uid);
 </script>
 
 <div class="expand">
