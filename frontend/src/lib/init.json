@@ -1,0 +1,17 @@
+{
+    "uid": null,
+    "survey": [
+        {
+            "question": "What is your name?",
+            "answer": null
+        },
+        {
+            "question": "What is your age?",
+            "answer": null
+        },
+        {
+            "question": "What is your favorite color?",
+            "answer": null
+        }
+    ]
+}
