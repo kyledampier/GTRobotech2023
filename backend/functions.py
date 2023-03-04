@@ -40,10 +40,7 @@ def update_form_data(user_data):
         return "Error reading database"
     uid = user_data['uid']
     answers = process_form_json(user_data)
-    print(answers)
-    user_dict[uid]["form_data"] = answers.tolist()
-    user_dict[uid]["available_to_chat"] = 1
-    
+    user_dict[uid] = {"form_data":answers.tolist(),"available_to_chat":1}
     store_users(user_dict)
 
 
