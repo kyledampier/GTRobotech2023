@@ -124,7 +124,7 @@
 		display: block;
 		width: 100%;
         border: none;
-        background-color: #373737;
+        background-color: #635f5f;
 	}
     progress::-webkit-progress-value {
         background-color: rgba(105, 255, 81, .75);
