@@ -33,7 +33,7 @@
   onMount(async () => {
     let userMessages = collection(db, `users/${uid}/messages`);
     let messagesQuery = query(userMessages);
-    onSnapshot(messagesQuery, (snapshot) => {
+    onSnapshot(messagesQuery, (snapshot: { docChanges: () => any[]; }) => {
       snapshot.docChanges().forEach((change) => {
         console.log(change.doc.id);
         if (change.type === "added") {
@@ -58,10 +58,19 @@
       messages = messages;
       messageValue = "";
       container.scrollTop = container.scrollHeight;
+      messages.push(
+      {
+        "timestamp": Date.now().toString(),
+        "to": messageValue
+      }
+      )
+      messages = messages
+      messageValue = ""
     }
+    container.scrollTo({top: container.scrollHeight})
   }
 
-  const onKeyPress = (e) => {
+  const onKeyPress = (e:any) => {
     if (e.charCode === 13) sendMessage();
   };
 </script>
@@ -82,7 +91,7 @@
       name="John Doe"
       imgSrc="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Lion_waiting_in_Namibia.jpg/440px-Lion_waiting_in_Namibia.jpg"
     />
-    <MessagingContent bind:messages bind:container />
+    <MessagingContent bind:messages bind:container/>
     <div class="inputBar">
       <textarea
         on:keypress={onKeyPress}
