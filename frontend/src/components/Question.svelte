@@ -3,6 +3,8 @@
 
 <script>
     import init from '../lib/init.json';
+    import { tweened } from "svelte/motion";
+    import { cubicOut } from "svelte/easing";
 
     const values = [
         { label: 'never', value: 1},
@@ -16,7 +18,13 @@
 
     let selected = false;
     let index = 0;
+    let total = 20;
     let question = init.survey[index].question;
+
+    const progress = tweened(0, {
+        duration: 400,
+        easing: cubicOut
+    });
 
     function onChange() {
         if (selected) {
@@ -24,12 +32,15 @@
         }
         question = init.survey[index].question;
         selected = false;
+        progress.set(index/total);
     }
 
 </script>
 
-<p>{index+1} |</p>
-<h1>{question}</h1>
+<div class="container">
+    <p>{index+1} |</p>
+    <h1>{question}</h1>
+</div>
 
 <div class="form">
     {#each values as value}
@@ -39,13 +50,36 @@
     {/each}
 </div>
 
+<div class="footer">
+    <progress value="{$progress}"></progress>
+</div>
 
 <style>
-    h1 {
-        text-align: center;
+    .container {
+        display: flex;
+        justify-content: center;
+    }
+    p {
+        font-size: 135%;
+        padding-right: 10px;
     }
     .form {
         text-align: center;
     }
-
+    progress {
+		display: block;
+		width: 100%;
+        background-color: #373737;
+	}
+    progress::-webkit-progress-value {
+        background-color: rgba(105, 255, 81, .75);
+    }
+    progress::-moz-progress-bar {
+        background-color: rgba(105, 255, 81, .75);
+    }
+    .footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
 </style>

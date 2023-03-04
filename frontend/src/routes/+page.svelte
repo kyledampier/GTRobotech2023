@@ -5,10 +5,10 @@
 
 </script>
 
-<Question />
-<!-- <Progress />
-<Bar /> -->
+<div class="question">
+  <Question/>
+</div>
 
 <style>
-
+  
 </style>

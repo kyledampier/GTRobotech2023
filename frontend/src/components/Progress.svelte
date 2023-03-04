@@ -7,7 +7,3 @@
 </script>
 
 <p>{current} / {total}</p>
-
-<style>
-    
-</style>
