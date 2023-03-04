@@ -1,14 +1,7 @@
 <script lang="ts">
-  import VideoSource from "../components/VideoSource.svelte";
+  import Bar from "../components/Bar.svelte";
 
-  export let data;
-  console.log(data);
-
-  let count = 0;
 </script>
 
-<h1>Form Evaluator</h1>
+<Bar />
 
-<h3>Test</h3>
-
-<VideoSource />
