@@ -2,24 +2,16 @@
 <!-- 8 | How are you? -->
 
 <script>
-    import init from '../lib/init.json';
+// @ts-nocheck
+
+    import { survey } from '../lib/init.json';
     import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
 
-    const values = [
-        { label: 'never', value: 1},
-        { label: '', value: 2},
-        { label: '', value: 3},
-        { label: '', value: 4},
-        { label: '', value: 5},
-        { label: '', value: 6},
-        { label: 'always', value: 7}
-    ];
-
-    let selected = false;
+    let selected;
     let index = 0;
     let total = 20;
-    let question = init.survey[index].question;
+    let question = survey[index].question;
 
     const progress = tweened(0, {
         duration: 400,
@@ -27,12 +19,17 @@
     });
 
     function onChange() {
-        if (selected) {
-            index += 1;
+        if (index != 19) {
+            if (selected !== null) {
+                index += 1;
+            }
+            question = survey[index].question;
+            selected = null;
+            progress.set(index/total);
+        } else {
+            progress.set(100);
+            // reroute
         }
-        question = init.survey[index].question;
-        selected = false;
-        progress.set(index/total);
     }
 
 </script>
@@ -43,11 +40,13 @@
 </div>
 
 <div class="form">
-    {#each values as value}
-    <label>
-        <input type=radio name="scale" bind:group={selected} value={value} on:change={onChange}>
-    </label>
-    {/each}
+    <input type=radio class="radio-lg" name="scale" bind:group={selected} value={1} on:change={onChange}>
+    <input type=radio class="radio-md" name="scale" bind:group={selected} value={2} on:change={onChange}>
+    <input type=radio class="input-3" name="scale" bind:group={selected} value={3} on:change={onChange}>
+    <input type=radio class="input-4" name="scale" bind:group={selected} value={4} on:change={onChange}>
+    <input type=radio class="input-5" name="scale" bind:group={selected} value={5} on:change={onChange}>
+    <input type=radio class="radio-md" name="scale" bind:group={selected} value={6} on:change={onChange}>
+    <input type=radio class="radio-lg" name="scale" bind:group={selected} value={7} on:change={onChange}>
 </div>
 
 <div class="footer">
@@ -62,6 +61,37 @@
     p {
         font-size: 135%;
         padding-right: 10px;
+    }
+    input[type=radio] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        -ms-appearance: none;
+        -o-appearance: none;
+        appearance: none;
+        position: relative;
+        top: 13.33333px;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 40px;
+        width: 40px;
+        transition: all 0.15s ease-out 0s;
+        background: #373737;
+        border: 2px solid;
+        cursor: pointer;
+        display: inline-block;
+        margin-right: 0.5rem;
+        outline: none;
+        position: relative;
+        z-index: 1000;
+        border-radius: 50%;
+    }
+
+    .radio-lg {
+        
+    }
+    .radio-md {
+        
     }
     .form {
         text-align: center;
