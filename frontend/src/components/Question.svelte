@@ -3,10 +3,14 @@
 
 <script>
     let question = "How are you?";
+
+    
 </script>
 
 <h1>{question}</h1>
 
 <style>
-
+    h1 {
+        text-align: center;
+    }
 </style>

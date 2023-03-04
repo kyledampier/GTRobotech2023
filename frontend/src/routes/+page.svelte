@@ -8,8 +8,8 @@
 
 <Question />
 <Button />
-<Bar />
 <Progress />
+<Bar />
 
 <style>
 
