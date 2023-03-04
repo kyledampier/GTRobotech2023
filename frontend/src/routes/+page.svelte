@@ -1,13 +1,12 @@
 <script lang="ts">
-  import VideoSource from "../components/VideoSource.svelte";
+  import Question from "../components/Question.svelte";
 
-  export let data;
-  console.log(data);
-
-  let count = 0;
 </script>
 
-<h1>Form Evaluator</h1>
-<h3>Test</h3>
+<div class="question">
+  <Question/>
+</div>
 
-<VideoSource />
+<style>
+  
+</style>
