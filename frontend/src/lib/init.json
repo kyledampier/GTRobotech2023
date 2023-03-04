@@ -1,0 +1,85 @@
+{
+    "uid": null,
+    "survey": [
+        {
+            "question": "Have you experienced any significant changes in appetite or weight?",
+            "answer": null
+        },
+        {
+            "question": "Do you have difficulty sleeping or sleeping too much?",
+            "answer": null
+        },
+        {
+            "question": "Have you experienced any traumatic events or significant stressors recently?",
+            "answer": null
+        },
+        {
+            "question": "Do you feel hopeless or helpless about the future?",
+            "answer": null
+        },
+        {
+            "question": "How often do you feel anxious or worried?",
+            "answer": null
+        },
+        {
+            "question": "Do you experience panic attacks or feelings of panic?",
+            "answer": null
+        },
+        {
+            "question": "Have you been avoiding social situations or withdrawing from activities?",
+            "answer": null
+        },
+        {
+            "question": "How often do you feel irritable or easily angered?",
+            "answer": null
+        },
+        {
+            "question": "Have you experienced any changes in your energy level or motivation?",
+            "answer": null
+        },
+        {
+            "question": "Do you have difficulty concentrating or making decisions?",
+            "answer": null
+        },
+        {
+            "question": "Have you had any suicidal thoughts or behaviors?",
+            "answer": null
+        },
+        {
+            "question": "Have you experienced any physical symptoms, such as headaches or stomach problems, without a clear medical explanation?",
+            "answer": null
+        },
+        {
+            "question": "Do you use drugs or alcohol to cope with stress or emotions?",
+            "answer": null
+        },
+        {
+            "question": "Have you experienced any significant changes in your sex drive?",
+            "answer": null
+        },
+        {
+            "question": "How often do you feel disconnected from your thoughts or feelings?",
+            "answer": null
+        },
+        {
+            "question": "Do you experience any symptoms of obsessive-compulsive disorder (OCD)?",
+            "answer": null
+        },
+        {
+            "question": "Have you experienced any symptoms of post-traumatic stress disorder (PTSD)?",
+            "answer": null
+        },
+        {
+            "question": "Have you experienced any symptoms of bipolar disorder, such as extreme mood swings or mania?",
+            "answer": null
+        },
+        {
+            "question": "Have you sought professional help or support for your mental health concerns in the past?",
+            "answer": null
+        },
+        {
+            "question": "How would you rate your mental health?",
+            "answer": null
+        }
+    ]
+}
