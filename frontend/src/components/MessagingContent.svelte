@@ -1,34 +1,16 @@
 <script lang="ts">
   import { uid } from "$lib/example_messages.json";
-  import type  { Message } from "../types/Message";
-  import FoundAnonymousChat from "../components/FoundAnonymousChat.svelte"
-
+  import type { Message } from "../types/Message";
+  import FoundAnonymousChat from "../components/FoundAnonymousChat.svelte";
 
   export let container: HTMLDivElement;
-
-  export let messages: Message[] = [
-    {
-      timestamp: "2009-11-10T22:00:00Z",
-      from: "some message",
-    },
-    {
-      timestamp: "2009-11-10T23:00:00Z",
-      to: "some response to the message",
-    },
-    {
-      timestamp: "2009-11-11T00:00:00Z",
-      from: "some message",
-    },
-    {
-      timestamp: "2009-11-11T01:00:00Z",
-      to: "some response to the message",
-    },
-  ];
-
-  //   console.log(uid);
+  export let messages: Message[] = [];
 </script>
 
 <div class="expand" id="msgDisplay" bind:this={container}>
+  {#if messages.length === 0}
+    <p class="noMessages">No messages yet</p>
+  {/if}
   {#each messages as message}
     {#if "to" in message}
       <p class="to">{message.to}</p>
@@ -39,8 +21,7 @@
   {/each}
 </div>
 
-<FoundAnonymousChat/>
-
+<!-- <FoundAnonymousChat/> -->
 <style>
   div {
     display: flex;
@@ -76,5 +57,12 @@
   .expand {
     flex: 1;
     overflow-y: scroll;
+  }
+
+  .noMessages {
+    margin: 1em;
+    color: #828282;
+    margin: 0 auto;
+    margin-top: 1em;
   }
 </style>

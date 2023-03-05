@@ -3,10 +3,10 @@
   export let name: string;
   export let imgSrc: string;
   export let id: string;
-  export let selectedChat;
+  export let selectedChat: string;
 </script>
 
-<div>
+<div style="background-color: {selectedChat == id ? '#373737' : 'transparent'}">
   <img src={imgSrc} alt={name} />
   <p>{lastMessage}</p>
 </div>
