@@ -15,14 +15,20 @@
   import UserProfile from "../../components/UserProfile.svelte";
   import ChatButton from "../../components/ChatButton.svelte";
   import MessagingContent from "../../components/MessagingContent.svelte";
+  import NewChatButton from "../../components/NewChatButton.svelte";
 
   let messageValue: string;
   let messages: Message[];
   let container: HTMLDivElement;
-  let uid: string = "eZslI0Kmwnm4f6bZYNUq";
+  let uid = localStorage.getItem("uid") ?? "eZslI0Kmwnm4f6bZYNUq";
   let selectedChat: string = "Ty7FnLqr1NwiNAFi752S";
-  // uid = "Ty7FnLqr1NwiNAFi752S";
-  // selectedChat = "eZslI0Kmwnm4f6bZYNUq";
+
+  function switchUsers() {
+    let tmp = uid;
+    uid = selectedChat;
+    selectedChat = tmp;
+  }
+  switchUsers();
 
   let matches: Match[] = [];
 
@@ -97,6 +103,7 @@
         bind:selectedChat
       />
     {/each}
+    <NewChatButton />
   </div>
   <div class="col">
     <UserProfile
