@@ -3,4 +3,8 @@ numpy
 matplotlib
 fastapi
 uvicorn
+numpy
+uuid
 wonderwords
+Pillow
+openai
