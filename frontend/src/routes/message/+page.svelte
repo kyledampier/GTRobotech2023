@@ -11,17 +11,22 @@
   import type { Message } from "../../types/Message";
   import type { Match } from "../../types/Match";
   import { db } from "$lib/firebase";
+  import { translateMessages } from "$lib/translateMessages";
 
   import UserProfile from "../../components/UserProfile.svelte";
   import ChatButton from "../../components/ChatButton.svelte";
   import MessagingContent from "../../components/MessagingContent.svelte";
   import NewChatButton from "../../components/NewChatButton.svelte";
+  import NewChatBotButton from "../../components/NewChatBotButton.svelte";
 
   let messageValue: string;
-  let messages: Message[];
+  let messages: Message[] = [];
   let container: HTMLDivElement;
   let uid = "eZslI0Kmwnm4f6bZYNUq";
   let selectedChat: string = "Ty7FnLqr1NwiNAFi752S";
+  let botProfile: { name: string; imgSrc: string };
+
+  let path = "http://localhost:8000/";
 
   onMount(() => {
     uid = localStorage.getItem("uid") as string;
@@ -58,7 +63,35 @@
     });
   });
 
+  function setMessages(msgs: Message[]) {
+    messages = msgs;
+  }
+
   function sendMessage() {
+    if (botProfile !== null) {
+      let botMsg = {
+        timestamp: Date.now().toString(),
+        to: messageValue,
+      };
+
+      messages = [...messages, botMsg];
+
+      const translatedMsgs = translateMessages(messages);
+
+      let botReq = fetch(path + "chat_with_bot", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify(translatedMsgs),
+      });
+
+      messageValue = "";
+      container.scrollTo({ top: container.scrollHeight });
+      return;
+    }
+
     // Update my messages
     let msgRef = doc(db, `users/${uid}/messages/${selectedChat}`);
     if (messageValue.length > 0) {
@@ -88,10 +121,10 @@
         { merge: true }
       );
     }
-    container.scrollTo({top: container.scrollHeight})
+    container.scrollTo({ top: container.scrollHeight });
   }
 
-  const onKeyPress = (e:any) => {
+  const onKeyPress = (e: any) => {
     if (e.charCode === 13) sendMessage();
   };
 </script>
@@ -103,18 +136,24 @@
         name={match.name}
         imgSrc={match.imgSrc}
         id={match.id}
-        lastMessage="Hello"
+        lastMessage={"Last Message"}
         bind:selectedChat
       />
     {/each}
-    <NewChatButton bind:uid={uid} />
+    <NewChatButton bind:uid />
+    <NewChatBotButton
+      bind:uid
+      {setMessages}
+      bind:botProfile
+      bind:selectedChat
+    />
   </div>
   <div class="col">
     <UserProfile
-      name="John Doe"
-      imgSrc="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Lion_waiting_in_Namibia.jpg/440px-Lion_waiting_in_Namibia.jpg"
+      name={botProfile ? botProfile.name : "Bot"}
+      imgSrc={botProfile ? botProfile.imgSrc : "/pfps/unicorn.png"}
     />
-    <MessagingContent bind:messages bind:container/>
+    <MessagingContent bind:messages bind:container />
     <div class="inputBar">
       <textarea
         on:keypress={onKeyPress}

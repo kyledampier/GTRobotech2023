@@ -1,12 +1,16 @@
 <script lang="ts">
   import { db } from "$lib/firebase";
-  import { setDoc, doc } from "firebase/firestore";
+  import type { Message } from "../types/Message";
+  import { getDoc, doc } from "firebase/firestore";
 
+  export let botProfile: { name: string; imgSrc: string };
   export let uid: string;
+  export let selectedChat: string;
   let path = "http://localhost:8000/";
-  let newChatUid: string;
 
-  async function newChat() {
+  export let setMessages = (messages: Message[]) => {};
+
+  async function chatWithBot() {
     let profileReq = await fetch(path + "profile", {
       method: "GET",
       headers: {
@@ -15,43 +19,44 @@
       },
     });
 
-    console.log(uid);
+    let profile = await profileReq.json();
+    profile.username = profile.username + " (bot)";
+    console.log(profile);
 
-    let uidReq = await fetch(path + "get_partner", {
+    let profileDoc = doc(db, "users", uid);
+    let profileSnap = await getDoc(profileDoc);
+    let profileData = profileSnap.data();
+
+    let newChatBot = await fetch(path + "start_chatbot", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
-      body: JSON.stringify({
-        uid: uid,
-      }),
+      body: JSON.stringify(profileData),
     });
 
-    let profileUid = await uidReq.json();
-    let profile = await profileReq.json();
+    const newChatBotData = await newChatBot.json();
+    let idx = newChatBotData.length - 1;
 
-    if (profileUid == "No Users Available to Chat") {
-      alert(profileUid);
-      return;
-    }
+    setMessages([
+      {
+        from: newChatBotData[idx].content,
+        timestamp: Date.now().toString(),
+      },
+    ]);
 
-    const userData = {
+    botProfile = {
       name: profile.username,
       imgSrc: profile.image_path,
-      messages: [],
     };
-
-    setDoc(doc(db, `users/${uid}/messages/${profileUid.uid}`), userData).then(
-      () => {
-        console.log("Document successfully written!");
-        newChatUid = profileUid;
-      }
-    );
+    selectedChat = "";
   }
 </script>
 
-<button on:click={newChat}> <span class="icon">+</span>New Chat</button>
+<button on:click={chatWithBot}>
+  <span class="icon">🤖</span>Chat With Bot</button
+>
 
 <style>
   button {

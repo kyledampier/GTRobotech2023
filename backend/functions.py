@@ -12,6 +12,7 @@ openai.api_key = "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"
 word_generator = RandomWord()
 animal_directory = os.path.join("pfps")
 
+
 def make_uuid():
     uid = str(uuid.uuid4())
     # allocate space for this data in the db
@@ -35,7 +36,7 @@ def create_profile():
     # user_image = base64.encodebytes(user_image).decode('utf-8')
     username = f"{adj.capitalize()} {animal_file[:-4].lower().capitalize()}"
 
-    return animal_directory + animal_file, username
+    return '/' + '/'.join([animal_directory, animal_file]), username
 
 
 def update_form_data(user_data):
@@ -137,8 +138,8 @@ def simulate_user_answers(num_users=10, num_questions=20):
     return user_dict
 
 
-fake_users = simulate_user_answers(5)
-store_users(fake_users)
+# fake_users = simulate_user_answers(5)
+# store_users(fake_users)
 
 
 def generate_survey_paragraph(survey):
@@ -155,16 +156,18 @@ def generate_survey_paragraph(survey):
 
     for item in survey:
         paragraph += "Question: " + item["question"] + "\n"
-        paragraph += "Answer: " + language_scale[item["answer"]] + "\n"
-
+        paragraph += "Answer: " + item['scale'] + "\n"
+    print(paragraph)
     return paragraph
 
 
 def start_chatbot(survey_pararaph):
     # create a completion
-    messages = {
+    messages = [{
         "role": "system",
-        "content": f"You are a mental health and wellness assistant, designed to interpret and respond to a completed mental health questionnaire. Use the context of these answers to better understand and empathize with your patient. You are allowed to imitate human emotions for the sake of empathizing with who you speak to. Be polite, but curious with those you assist. Survey: {survey_pararaph}"}
+        "content": f"You are a mental health and wellness assistant, designed to interpret and respond to a completed mental health questionnaire. Use the context of these answers to better understand and empathize with your patient. You are allowed to imitate human emotions for the sake of empathizing with who you speak to. Be polite, but curious with those you assist. Survey: {survey_pararaph}"},
+        {"role": "assistant", "content": "As an AI mental health and wellness assistant, I do not have the capacity to feel emotions, but I am here to support you. Would you like to talk about how you are feeling?"}]
+
     return messages
 
 
