@@ -1,7 +1,7 @@
 
 <header>
     <img style="padding-left:30px" width="150px" height="150px" src="./static/logo_white.png" alt="logo">
-    <a href="/">
+    <a href="/questions">
         <p><b>Start Networking</b></p>
         <img class="arrow" width=32px height=32px src="https://cdn-icons-png.flaticon.com/512/32/32213.png" alt="arrow">
     </a>
@@ -46,12 +46,18 @@
     }
     }
 
+    h1
+    {
+        margin: 0;
+    }
+
     header
     {
         border-bottom: solid;
         border-color: white;
         border-width: 3px;
-        margin: 30px;
+        margin-right: 30px;
+        margin-left:30px;
         align-items: center;
         justify-content: center;
     }
@@ -122,5 +128,11 @@
     .horizontal
     {
         flex-direction: row;
+    }
+
+    .horizontal p
+    {
+        margin: 10px;
+        padding: 0;
     }
 </style>
