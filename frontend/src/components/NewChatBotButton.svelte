@@ -3,7 +3,7 @@
   import type { Message } from "../types/Message";
   import { getDoc, doc } from "firebase/firestore";
 
-  export let botProfile: { name: string; imgSrc: string };
+  export let botProfile: { name: string; imgSrc: string } | {};
   export let uid: string;
   export let selectedChat: string;
   let path = "http://localhost:8000/";

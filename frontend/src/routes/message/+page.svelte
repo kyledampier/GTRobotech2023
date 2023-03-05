@@ -37,7 +37,7 @@
     uid = selectedChat;
     selectedChat = tmp;
   }
-  switchUsers();
+  // switchUsers();
 
   let matches: Match[] = [];
 
@@ -48,6 +48,12 @@
       matches = [];
       snapshot.docChanges().forEach((change) => {
         let tmp = change.doc.data() as Match;
+
+        // get idx of the change from matches
+        let idx = matches.findIndex((match) => match.id === change.doc.id);
+        // remove the match from matches
+        matches.splice(idx, 1);
+        // add the match to the front of matches
         matches.push({
           id: change.doc.id,
           name: tmp.name,
