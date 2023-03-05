@@ -9,8 +9,10 @@ import openai
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
+from dotenv import load_dotenv
 
-openai.api_key = "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"
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 word_generator = RandomWord()
 animal_directory = os.path.join("pfps")
@@ -37,7 +39,7 @@ def create_profile():
     print(animal_directory + animal_file)
     # user_image = Image.open(animal_directory + animal_file).convert("RGB")
     # user_image = base64.encodebytes(user_image).decode('utf-8')
-    #username = f"{adj.capitalize()} {animal_file[:-4].lower().capitalize()}"
+    username = f"{adj.capitalize()} {animal_file[:-4].lower().capitalize()}"
 
     return '/' + '/'.join([animal_directory, animal_file]), username
 
