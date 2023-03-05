@@ -1,3 +1,4 @@
+from array import array
 import numpy as np
 import uuid
 from wonderwords import RandomWord
@@ -126,3 +127,13 @@ def simulate_user_answers(num_users=10, num_questions=20):
     return user_dict
 # fake_users = simulate_user_answers(2)
 # store_users(fake_users)
+
+def generate_survey_paragraph(survey):  
+    language_scale = {1: "strongly disagree", 2: "disagree", 3: "slightly disagree", 4:"neutral", 5:"slightly agree", 6: "agree", 7: "strongly agree"}
+    paragraph = ""
+
+    for item in survey:
+        paragraph += "Question: " + item["question"] + "\n"
+        paragraph += "Answer: " + language_scale[item["answer"]] + "\n"
+
+    return paragraph
