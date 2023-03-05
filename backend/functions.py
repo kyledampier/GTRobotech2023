@@ -1,4 +1,3 @@
-from array import array
 import numpy as np
 import uuid
 from wonderwords import RandomWord
