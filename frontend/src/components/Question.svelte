@@ -7,17 +7,21 @@
     import { survey } from '../lib/init.json';
     import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
-    import {v4 as uuidv4} from 'uuid';
 	import { redirect } from "@sveltejs/kit";
 	import { goto } from "$app/navigation";
+    import TitleAnimated from "./TitleAnimated.svelte";
 
     let selected;
     let index = 0;
     let total = 20;
     let question = survey[index].question;
+
+    let questions = [];
+    for (let q in survey) {
+        questions.push(survey[q].question);
+    }
     
     let path = "http://localhost:8000/";
-    let uid = uuidv4();
 
     const progress = tweened(0, {
         duration: 400,
@@ -50,46 +54,60 @@
         } else {
             progress.set(100);
             sendData();
-            goto('/message');
+            //goto('/message');
         }
     }
 
 </script>
 
-<div class="container">
-    <p>{index+1} |</p>
-    <h1>{question}</h1>
+<div class="survey-item">
+    <div class="container">
+        <p>{index+1} |</p>
+        <!-- <h1>{question}</h1> -->
+        <TitleAnimated bind:val={index} titles={questions} />
+
+    </div>
+
+
+    <div class="scale">
+
+    </div>
+    
+    <div class="form">
+        <input type=radio class="radio-lg pink" name="scale" bind:group={selected} value={1} on:change={onChange}>
+        <input type=radio class="radio-md pink" name="scale" bind:group={selected} value={2} on:change={onChange}>
+        <input type=radio class="radio-sm pink" name="scale" bind:group={selected} value={3} on:change={onChange}>
+        <input type=radio class="radio-ne gray" name="scale" bind:group={selected} value={4} on:change={onChange}>
+        <input type=radio class="radio-sm green" name="scale" bind:group={selected} value={5} on:change={onChange}>
+        <input type=radio class="radio-md green" name="scale" bind:group={selected} value={6} on:change={onChange}>
+        <input type=radio class="radio-lg green" name="scale" bind:group={selected} value={7} on:change={onChange}>
+    </div>
+    <div class="footer">
+        <progress value="{$progress}"></progress>
+    </div>
 </div>
 
-<div class="form">
-    <input type=radio class="radio-lg pink" name="scale" bind:group={selected} value={1} on:change={onChange}>
-    <input type=radio class="radio-md pink" name="scale" bind:group={selected} value={2} on:change={onChange}>
-    <input type=radio class="radio-sm pink" name="scale" bind:group={selected} value={3} on:change={onChange}>
-    <input type=radio class="radio-ne gray" name="scale" bind:group={selected} value={4} on:change={onChange}>
-    <input type=radio class="radio-sm green" name="scale" bind:group={selected} value={5} on:change={onChange}>
-    <input type=radio class="radio-md green" name="scale" bind:group={selected} value={6} on:change={onChange}>
-    <input type=radio class="radio-lg green" name="scale" bind:group={selected} value={7} on:change={onChange}>
-</div>
-
-<div class="footer">
-    <progress value="{$progress}"></progress>
-</div>
 
 <style>
+    .survey-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100vh;
+    }
     .container {
         display: flex;
         justify-content: center;
         align-items: flex-start;
-    }
-
-    h1 {
-        max-width: 75vw;
-        text-align: center;
+        width: 70vw;
     }
     p {
-        font-size: 135%;
+        font-size: 120%;
         padding-right: 10px;
         justify-content: left;
+        margin-top: 10px;
     }
     input[type=radio] {
         -webkit-appearance: none;
@@ -113,34 +131,55 @@
         border-radius: 50%;
     }
     .radio-lg {
-        height: 50px;
-        width: 50px;
+        height: 9vw;
+        width: 9vw;
     }
     .radio-md {
-        height: 42px;
-        width: 42px;
+        height: 7.5vw;
+        width: 7.5vw;
     }
     .radio-sm {
-        height: 34px;
-        width: 34px;
+        height: 6vw;
+        width: 6vw;
     }
     .radio-ne {
-        height: 25px;
-        width: 25px;
+        height: 4.5vw;
+        width: 4.5vw;
     }
     .pink {
         border: solid #B804B1;
+        transition: all 1.0s ease-in-out; 
     }
+    .pink:hover {
+        border: 6px solid #B804B1;
+        background-color: #B804B166;
+    }
+
     .green {
         border: solid #69FF51;
+        transition: all 1.0s ease-in-out;
     }
+
+    .green:hover {
+        border: 6px solid #69FF51;
+        background-color: #69FF5166;
+    }
+
     .gray {
         border: solid gray;
+        transition: all 1.0s ease-in-out;
     }
+
+    .gray:hover {
+        border: 6px solid #808080;
+        background-color: #80808066;
+    }
+
     .form {
         display: flex;
         align-items: center;
         justify-content: center;
+        gap: 1em;
     }
     progress {
 		display: block;
@@ -158,5 +197,6 @@
         position: fixed;
         bottom: 0;
         width: 100%;
+        height: 12px;
     }
 </style>
