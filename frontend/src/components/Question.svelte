@@ -104,6 +104,21 @@
             <input type=radio class="radio-sm green" name="scale" bind:group={selected} value={5} on:change={onChange}>
             <input type=radio class="radio-md green" name="scale" bind:group={selected} value={6} on:change={onChange}>
             <input type=radio class="radio-lg green" name="scale" bind:group={selected} value={7} on:change={onChange}>
+<div class="container">
+    <p>{index+1} |</p>
+    <h1>{question}</h1>
+
+    <div class="form">
+        <input type=radio class="radio-lg pink" name="scale" bind:group={selected} value={1} on:change={onChange}>
+        <input type=radio class="radio-md pink" name="scale" bind:group={selected} value={2} on:change={onChange}>
+        <input type=radio class="radio-sm pink" name="scale" bind:group={selected} value={3} on:change={onChange}>
+        <input type=radio class="radio-ne gray" name="scale" bind:group={selected} value={4} on:change={onChange}>
+        <input type=radio class="radio-sm green" name="scale" bind:group={selected} value={5} on:change={onChange}>
+        <input type=radio class="radio-md green" name="scale" bind:group={selected} value={6} on:change={onChange}>
+        <input type=radio class="radio-lg green" name="scale" bind:group={selected} value={7} on:change={onChange}>
+    </div>
+
+</div>
 
         <div class="scale">
             {#if scale==="change"}
@@ -134,9 +149,16 @@
     }
     .container {
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: flex-start;
         width: 70vw;
+        align-items: center;
+    }
+
+    h1 {
+        max-width: 75vw;
+        text-align: center;
     }
     p {
         font-size: 120%;
