@@ -10,8 +10,7 @@ import openai
 openai.api_key = "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"
 
 word_generator = RandomWord()
-animal_directory = os.getcwd() + "\pfps\\"
-
+animal_directory = os.path.join("pfps")
 
 def make_uuid():
     uid = str(uuid.uuid4())
@@ -27,7 +26,8 @@ def make_uuid():
 
 
 def create_profile():
-    adj = word_generator.word(include_parts_of_speech=["adjectives"], word_max_length=5)
+    adj = word_generator.word(include_parts_of_speech=[
+                              "adjectives"], word_max_length=5)
     animal_files = os.listdir(animal_directory)
     animal_file = random.choice(animal_files)
     print(animal_directory + animal_file)
@@ -65,7 +65,7 @@ def get_available_partners():
         return None
 
 # def get_similar_questions(uid):
-    
+
 
 def choose_partner(user_data, distance_preference="closest"):  # * Or farthest
     # TODO Rewrite to only take uuid
@@ -120,11 +120,11 @@ def process_form_json(form):
     return answers
 
 
-import random
-
 random.seed(42)
 
 #! for debugging users
+
+
 def simulate_user_answers(num_users=10, num_questions=20):
     # * outputs numpy array in the form of N x R, N being users and R being response values
     user_dict = {}
@@ -164,7 +164,7 @@ def start_chatbot(survey_pararaph):
     # create a completion
     messages = {
         "role": "system",
-        "content": f"You are a mental health and wellness assistant, designed to interpret and respond to a completed mental health questionnaire. Use the context of these answers to better understand and empathize with your patient. You are allowed to imitate human emotions for the sake of empathizing with who you speak to. Be polite, but curious with those you assist. Survey: {survey_pararaph}"    }
+        "content": f"You are a mental health and wellness assistant, designed to interpret and respond to a completed mental health questionnaire. Use the context of these answers to better understand and empathize with your patient. You are allowed to imitate human emotions for the sake of empathizing with who you speak to. Be polite, but curious with those you assist. Survey: {survey_pararaph}"}
     return messages
 
 
