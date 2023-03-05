@@ -4,9 +4,16 @@
   export let imgSrc: string;
   export let id: string;
   export let selectedChat: string;
+
+  export let onClick = (id: string) => {};
+
+  function onClickDiv() {
+    onClick(id);
+  }
+
 </script>
 
-<div style="background-color: {selectedChat == id ? '#373737' : 'transparent'}">
+<div on:click={onClickDiv} style="background-color: {selectedChat == id ? '#373737' : 'transparent'}">
   <img src={imgSrc} alt={name} />
   <p>{lastMessage}</p>
 </div>

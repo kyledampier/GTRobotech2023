@@ -10,7 +10,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 word_generator = RandomWord()
 animal_directory = os.path.join("pfps")

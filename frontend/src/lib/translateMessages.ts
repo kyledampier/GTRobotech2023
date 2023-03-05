@@ -13,3 +13,17 @@ export function translateMessages(messages: Message[]): { role: string, content:
 
     return output;
 }
+
+export function outputMessages(messages: { role: string, content: string}[]): Message[] {
+    let output: Message[] = [];
+
+    messages.forEach((message) => {
+        if (message.role === "assistant") {
+            output.push({ from: message.content, timestamp: Date.now() });
+        } else {
+            output.push({ to: message.content, timestamp: Date.now() });
+        }
+    });
+
+    return output;
+}

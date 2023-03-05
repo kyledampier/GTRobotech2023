@@ -32,7 +32,7 @@
   }
 
   .to {
-    background-color: #444444;
+    background-color: rgba(185, 4, 179, 50%);
     color: #fff;
     padding: 1em;
     border-radius: 1em;

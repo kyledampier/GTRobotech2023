@@ -11,7 +11,7 @@
   import type { Message } from "../../types/Message";
   import type { Match } from "../../types/Match";
   import { db } from "$lib/firebase";
-  import { translateMessages } from "$lib/translateMessages";
+  import { translateMessages, outputMessages } from "$lib/translateMessages";
 
   import UserProfile from "../../components/UserProfile.svelte";
   import ChatButton from "../../components/ChatButton.svelte";
@@ -24,7 +24,7 @@
   let container: HTMLDivElement;
   let uid = "eZslI0Kmwnm4f6bZYNUq";
   let selectedChat: string = "Ty7FnLqr1NwiNAFi752S";
-  let botProfile: { name: string; imgSrc: string };
+  let botProfile: { name: string; imgSrc: string } | {};
 
   let path = "http://localhost:8000/";
 
@@ -67,25 +67,35 @@
     messages = msgs;
   }
 
-  function sendMessage() {
-    if (botProfile !== null) {
+  function onClick(id: string) {
+    selectedChat = id;
+    messages = matches.find((match) => match.id === id)?.messages as Message[];
+    botProfile = {};
+  }
+
+  async function sendMessage() {
+    if (Object.keys(botProfile).length !== 0) {
       let botMsg = {
         timestamp: Date.now().toString(),
         to: messageValue,
       };
+      const translatedMsgs = translateMessages(messages);
 
       messages = [...messages, botMsg];
 
-      const translatedMsgs = translateMessages(messages);
-
-      let botReq = fetch(path + "chat_with_bot", {
+      let botReq = await fetch(path + "chat_with_bot", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
         },
-        body: JSON.stringify(translatedMsgs),
+        body: JSON.stringify({ messages: translatedMsgs, input: messageValue }),
       });
+
+      let chatData = await botReq.json();
+      let chatResult = outputMessages(chatData);
+
+      messages = chatResult;
 
       messageValue = "";
       container.scrollTo({ top: container.scrollHeight });
@@ -137,6 +147,7 @@
         imgSrc={match.imgSrc}
         id={match.id}
         lastMessage={"Last Message"}
+        {onClick}
         bind:selectedChat
       />
     {/each}
