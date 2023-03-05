@@ -20,8 +20,12 @@
   let messageValue: string;
   let messages: Message[];
   let container: HTMLDivElement;
-  let uid = localStorage.getItem("uid") ?? "eZslI0Kmwnm4f6bZYNUq";
+  let uid = "eZslI0Kmwnm4f6bZYNUq";
   let selectedChat: string = "Ty7FnLqr1NwiNAFi752S";
+
+  onMount(() => {
+    uid = localStorage.getItem("uid") as string;
+  });
 
   function switchUsers() {
     let tmp = uid;
@@ -103,7 +107,7 @@
         bind:selectedChat
       />
     {/each}
-    <NewChatButton />
+    <NewChatButton bind:uid={uid} />
   </div>
   <div class="col">
     <UserProfile
@@ -120,9 +124,9 @@
       <button on:click={sendMessage} class="msgBtn">
         <img
           class="msgIcon"
-          width="70px"
-          height="70px"
-          src="https://icon-library.com/images/send-message-icon-png/send-message-icon-png-24.jpg"
+          width="48px"
+          height="48px"
+          src="/icons/send.png"
           alt="paper_plane"
         />
       </button>
@@ -184,6 +188,7 @@
     margin-top: 10px;
     background-color: #202020;
     border-radius: 1em;
+    padding: 12px;
     outline: none;
   }
 

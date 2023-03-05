@@ -10,8 +10,7 @@ import openai
 openai.api_key = "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"
 
 word_generator = RandomWord()
-animal_directory = os.getcwd() + "\pfps\\"
-
+animal_directory = os.path.join("pfps")
 
 def make_uuid():
     uid = str(uuid.uuid4())
@@ -27,13 +26,14 @@ def make_uuid():
 
 
 def create_profile():
-    adj = word_generator.word(include_parts_of_speech=["adjectives"], word_max_length=5)
+    adj = word_generator.word(include_parts_of_speech=[
+                              "adjectives"], word_max_length=5)
     animal_files = os.listdir(animal_directory)
     animal_file = random.choice(animal_files)
     print(animal_directory + animal_file)
     # user_image = Image.open(animal_directory + animal_file).convert("RGB")
     # user_image = base64.encodebytes(user_image).decode('utf-8')
-    username = f"{adj.capitalize()} {animal_file[:-4].lower().capitalize()}"
+    #username = f"{adj.capitalize()} {animal_file[:-4].lower().capitalize()}"
 
     return animal_directory + animal_file, username
 
@@ -71,13 +71,15 @@ def choose_partner(user_data, distance_preference="closest"):  # * Or farthest
     uid = user_data["uid"]
 
     if not user_dict or uid not in user_dict:
-        return "Error reading database"
+        return "Error reading database 1"
 
     answers = user_dict[uid]["form_data"]
 
     distance_dict = {}
     for x in user_dict.keys():
         if user_dict[x]["available_to_chat"] == 1 and x != uid:
+            if any(elem is None for elem in user_dict[x]["form_data"]):
+                return "403 forbidden, kyle!"
             distance_dict[x] = np.linalg.norm(
                 np.array(user_dict[x]["form_data"]) - np.array(answers)
             )
@@ -98,7 +100,7 @@ def on_chat_end(user_data):
     user_id = user_data["uid"]
     user_dict = get_available_partners()
     if not user_dict:
-        return "Error reading database"
+        return "Empty User Dict"
     if user_id not in user_dict:
         return False
     user_dict[user_id]["available_to_chat"] = 1
@@ -116,11 +118,11 @@ def process_form_json(form):
     return answers
 
 
-import random
-
 random.seed(42)
 
 #! for debugging users
+
+
 def simulate_user_answers(num_users=10, num_questions=20):
     # * outputs numpy array in the form of N x R, N being users and R being response values
     user_dict = {}
@@ -133,8 +135,8 @@ def simulate_user_answers(num_users=10, num_questions=20):
     return user_dict
 
 
-# fake_users = simulate_user_answers(2)
-# store_users(fake_users)
+fake_users = simulate_user_answers(5)
+store_users(fake_users)
 
 
 def generate_survey_paragraph(survey):
@@ -160,7 +162,7 @@ def start_chatbot(survey_pararaph):
     # create a completion
     messages = {
         "role": "system",
-        "content": f"You are a mental health and wellness assistant, designed to interpret and respond to a completed mental health questionnaire. Use the context of these answers to better understand and empathize with your patient. You are allowed to imitate human emotions for the sake of empathizing with who you speak to. Be polite, but curious with those you assist. Survey: {survey_pararaph}"    }
+        "content": f"You are a mental health and wellness assistant, designed to interpret and respond to a completed mental health questionnaire. Use the context of these answers to better understand and empathize with your patient. You are allowed to imitate human emotions for the sake of empathizing with who you speak to. Be polite, but curious with those you assist. Survey: {survey_pararaph}"}
     return messages
 
 
@@ -176,7 +178,3 @@ def get_completion(user_data):
     print(messages, completion)
     messages.append(completion['message'])
     return messages
-
-
-# fake_users = simulate_user_answers(2)
-# store_users(fake_users)
