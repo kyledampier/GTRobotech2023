@@ -5,7 +5,6 @@
   import { survey } from "../lib/init.json";
   import { tweened } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
-  import { redirect } from "@sveltejs/kit";
   import { onMount } from "svelte";
   import { db } from "$lib/firebase";
   import { addDoc, collection } from "firebase/firestore";
@@ -17,9 +16,11 @@
   let total = 20;
 
   let questions = [];
-for (let q in survey) {
+  for (let q in survey) {
     questions.push(survey[q].question);
-}
+  }
+
+  let scale = survey[index].scale;
 
   let path = "http://localhost:8000/";
   let uid = "";
@@ -54,16 +55,16 @@ for (let q in survey) {
     const json = await res.json();
     result = JSON.stringify(json);
   }
-  
+
   function onChange() {
     survey[index].answer = selected;
     if (index != 19) {
       if (selected !== null) {
         index += 1;
+        progress.set(index / total);
       }
-      question = survey[index].question;
       selected = null;
-      progress.set(index / total);
+      scale = survey[index].scale;
     } else {
       progress.set(100);
       sendData();
@@ -79,19 +80,39 @@ for (let q in survey) {
         <TitleAnimated bind:val={index} titles={questions} />
 
     </div>
-
-    <div class="scale">
-
-    </div>
     
     <div class="form">
-        <input type=radio class="radio-lg pink" name="scale" bind:group={selected} value={1} on:change={onChange}>
-        <input type=radio class="radio-md pink" name="scale" bind:group={selected} value={2} on:change={onChange}>
-        <input type=radio class="radio-sm pink" name="scale" bind:group={selected} value={3} on:change={onChange}>
-        <input type=radio class="radio-ne gray" name="scale" bind:group={selected} value={4} on:change={onChange}>
-        <input type=radio class="radio-sm green" name="scale" bind:group={selected} value={5} on:change={onChange}>
-        <input type=radio class="radio-md green" name="scale" bind:group={selected} value={6} on:change={onChange}>
-        <input type=radio class="radio-lg green" name="scale" bind:group={selected} value={7} on:change={onChange}>
+        <div class="scale" style="padding-right: 0px;">
+            {#if scale==="change"}
+                <p>No change</p>
+            {:else if scale==="never"}
+                <p>Never</p>
+            {:else if scale==="significant"}
+                <p>No</p>
+            {:else}
+                <p>Bad</p>
+            {/if}
+        </div>
+
+            <input type=radio class="radio-lg pink" name="scale" bind:group={selected} value={1} on:change={onChange}>
+            <input type=radio class="radio-md pink" name="scale" bind:group={selected} value={2} on:change={onChange}>
+            <input type=radio class="radio-sm pink" name="scale" bind:group={selected} value={3} on:change={onChange}>
+            <input type=radio class="radio-ne gray" name="scale" bind:group={selected} value={4} on:change={onChange}>
+            <input type=radio class="radio-sm green" name="scale" bind:group={selected} value={5} on:change={onChange}>
+            <input type=radio class="radio-md green" name="scale" bind:group={selected} value={6} on:change={onChange}>
+            <input type=radio class="radio-lg green" name="scale" bind:group={selected} value={7} on:change={onChange}>
+
+        <div class="scale">
+            {#if scale==="change"}
+                <p>Significant change</p>
+            {:else if scale==="never"}
+                <p>Always</p>
+            {:else if scale==="significant"}
+                <p>Very significant</p>
+            {:else}
+                <p>Good</p>
+            {/if}
+        </div>
     </div>
     <div class="footer">
         <progress value="{$progress}"></progress>
@@ -135,7 +156,7 @@ for (let q in survey) {
         background: #373737;
         cursor: pointer;
         display: inline-block;
-        margin-right: 0.5rem;
+        margin: 0px;
         outline: none;
         position: relative;
         z-index: 1000;
@@ -165,31 +186,40 @@ for (let q in survey) {
         border: 6px solid #B804B1;
         background-color: #B804B166;
     }
-
     .green {
         border: solid #69FF51;
         transition: all 1.0s ease-in-out;
     }
-
     .green:hover {
         border: 6px solid #69FF51;
         background-color: #69FF5166;
     }
-
     .gray {
         border: solid gray;
         transition: all 1.0s ease-in-out;
     }
-
     .gray:hover {
         border: 6px solid #808080;
         background-color: #80808066;
     }
-
+    .scale {
+        display: flex;
+        height: 100%;
+        align-items: center;
+        gap: 50vw;
+        width: 250px;
+    }
+    .scale > p {
+        margin: 0px;
+        margin-top: 27px;
+        font-size: 1.4em;
+    }
     .form {
         display: flex;
         align-items: center;
         justify-content: center;
+        height: 25vh;
+        width: 500vw;
         gap: 1em;
     }
     progress {
