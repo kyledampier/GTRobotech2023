@@ -78,9 +78,10 @@
         { merge: true }
       );
     }
+    container.scrollTo({top: container.scrollHeight})
   }
 
-  const onKeyPress = (e) => {
+  const onKeyPress = (e:any) => {
     if (e.charCode === 13) sendMessage();
   };
 </script>
@@ -102,7 +103,7 @@
       name="John Doe"
       imgSrc="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Lion_waiting_in_Namibia.jpg/440px-Lion_waiting_in_Namibia.jpg"
     />
-    <MessagingContent bind:messages bind:container />
+    <MessagingContent bind:messages bind:container/>
     <div class="inputBar">
       <textarea
         on:keypress={onKeyPress}

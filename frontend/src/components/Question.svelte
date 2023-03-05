@@ -1,63 +1,75 @@
-<!-- Displays question with number next to it -->
 <!-- 8 | How are you? -->
-
 <script>
-// @ts-nocheck
+  // @ts-nocheck
 
-    import { survey } from '../lib/init.json';
-    import { tweened } from "svelte/motion";
-    import { cubicOut } from "svelte/easing";
-	import { redirect } from "@sveltejs/kit";
-	import { goto } from "$app/navigation";
-    import TitleAnimated from "./TitleAnimated.svelte";
+  import { survey } from "../lib/init.json";
+  import { tweened } from "svelte/motion";
+  import { cubicOut } from "svelte/easing";
+  import { redirect } from "@sveltejs/kit";
+  import { onMount } from "svelte";
+  import { db } from "$lib/firebase";
+  import { addDoc, collection } from "firebase/firestore";
+  import { goto } from "$app/navigation";
+  import TitleAnimated from "./TitleAnimated.svelte";
 
-    let selected;
-    let index = 0;
-    let total = 20;
-    let question = survey[index].question;
+  let selected;
+  let index = 0;
+  let total = 20;
 
-    let questions = [];
-    for (let q in survey) {
-        questions.push(survey[q].question);
-    }
-    
-    let path = "http://localhost:8000/";
+  let questions = [];
+for (let q in survey) {
+    questions.push(survey[q].question);
+}
 
-    const progress = tweened(0, {
-        duration: 400,
-        easing: cubicOut
+  let path = "http://localhost:8000/";
+  let uid = "";
+
+  const progress = tweened(0, {
+    duration: 400,
+    easing: cubicOut,
+  });
+
+  onMount(() => {
+    sendData();
+  });
+
+  async function sendData() {
+    let newUserDoc = await addDoc(collection(db, "users"), {
+      survey: survey,
     });
 
-    async function sendData() {
-        const res = await fetch(path + 'submit_form', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-            body: JSON.stringify({
-                uid,
-                survey
-            })
-        })
-        const json = await res.json();
-        result = JSON.stringify(json)
+    uid = newUserDoc.id;
+
+    const res = await fetch(path + "submit_form", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        uid,
+        survey,
+      }),
+    });
+    const json = await res.json();
+    result = JSON.stringify(json);
+  }
+  
+  function onChange() {
+    survey[index].answer = selected;
+    if (index != 19) {
+      if (selected !== null) {
+        index += 1;
+      }
+      question = survey[index].question;
+      selected = null;
+      progress.set(index / total);
+    } else {
+      progress.set(100);
+      sendData();
+      // goto('/message');
     }
-
-    function onChange() {
-        survey[index].answer = selected;
-
-        if (index != 19) {
-            if (selected !== null) {
-                index += 1;
-            }
-            question = survey[index].question;
-            selected = null;
-            progress.set(index/total);
-        } else {
-            progress.set(100);
-            sendData();
-            //goto('/message');
-        }
-    }
-
+  }
 </script>
 
 <div class="survey-item">
@@ -67,7 +79,6 @@
         <TitleAnimated bind:val={index} titles={questions} />
 
     </div>
-
 
     <div class="scale">
 
