@@ -6,7 +6,7 @@ import random
 import os
 from PIL import Image
 import json
-
+import openai
 
 word_generator = RandomWord()
 animal_directory = os.getcwd() + "\pfps\\"
@@ -137,3 +137,20 @@ def generate_survey_paragraph(survey):
         paragraph += "Answer: " + language_scale[item["answer"]] + "\n"
 
     return paragraph
+
+
+
+def start_chatbot(survey_pararaph):
+    # create a completion
+    messages = {"role": "assistant", "content":"As an AI mental health and wellness assistant, I do not have the capacity to feel emotions, but I am here to support you. Would you like to talk about how you are feeling?"}
+    return messages
+
+def get_completion(messages, user_input):
+    completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", 
+    messages=[
+    {"role": "system", "content": f"Do not say you are an AI. You are a mental health and wellness assistant, designed to interpret and respond to a completed mental health questionnaire. Use the context of these answers to better understand and empathize with your patient. You are allowed to imitate human emotions for the sake of empathizing with who you speak to. Be polite, but curious with those you assist {survey_pararaph}"},
+    {"role": "assistant", "content": user_input}], max_tokens=150)
+    completion = completion["choices"][0]
+    print(messages, completion)
+# fake_users = simulate_user_answers(2)
+# store_users(fake_users)

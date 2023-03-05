@@ -6,7 +6,7 @@ import io
 from functions import *
 from fastapi import Response, Request
 from starlette.middleware.cors import CORSMiddleware
-
+import openai
 
 app = FastAPI()
 
@@ -34,6 +34,16 @@ async def update_user_data(request: Request):
     #* given a user's form data,
     user_data = await request.json()
     update_form_data(user_data)
+
+@app.get("/start_chatbot")
+async def begin_chatbot(request: Request):
+    #* given a user's form data,
+    user_data = await request.json()
+    preprompt = generate_survey_paragraph(user_data['survey'])
+    messages = start_chatbot(preprompt)
+    return messages
+
+
 
 @app.get("/profile")
 def generate_profile():
