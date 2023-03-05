@@ -11,7 +11,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv('.env')
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 word_generator = RandomWord()
