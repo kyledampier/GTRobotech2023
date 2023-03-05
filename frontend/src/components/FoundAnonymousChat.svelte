@@ -1,6 +1,4 @@
 <script lang="ts">
-    import UserProfile from "./UserProfile.svelte";
-
     // Get anaonymous name and photo
     let randomName: string = "Lucious Lion";
   </script>

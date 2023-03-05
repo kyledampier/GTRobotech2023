@@ -79,9 +79,7 @@
 <div class="survey-item">
     <div class="container">
         <p>{index + 1} |</p>
-        <!-- <h1>{question}</h1> -->
         <TitleAnimated bind:val={index} titles={questions} />
-
     </div>
     
     <div class="form">

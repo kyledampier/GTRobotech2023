@@ -37,7 +37,7 @@ def create_profile():
     print(animal_directory + animal_file)
     # user_image = Image.open(animal_directory + animal_file).convert("RGB")
     # user_image = base64.encodebytes(user_image).decode('utf-8')
-    username = f"{adj.capitalize()} {animal_file[:-4].lower().capitalize()}"
+    #username = f"{adj.capitalize()} {animal_file[:-4].lower().capitalize()}"
 
     return '/' + '/'.join([animal_directory, animal_file]), username
 
@@ -78,8 +78,6 @@ def get_available_partners():
     except Exception:
         print("Error reading database or empty")
         return None
-
-# def get_similar_questions(uid):
 
 
 def choose_partner(user_data, distance_preference="closest"):  # * Or farthest
@@ -210,7 +208,7 @@ def get_database():
         survey = doc.to_dict()['survey']
         newJson['survey'] = survey
         update_form_data(newJson)
-    
+
 
 # fake_users = simulate_user_answers(2)
 # store_users(fake_users)
