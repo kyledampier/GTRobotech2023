@@ -37,6 +37,7 @@ async def update_user_data(request: Request):
     # * given a user's form data,
     user_data = await request.json()
     update_form_data(user_data)
+    get_database()
 
 @app.get("/start_chatbot")
 async def begin_chatbot(request: Request):
