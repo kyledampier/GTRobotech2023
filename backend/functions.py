@@ -65,7 +65,7 @@ def get_available_partners():
         return None
 
 # def get_similar_questions(uid):
-    #
+    
 
 def choose_partner(user_data, distance_preference="closest"):  # * Or farthest
     # TODO Rewrite to only take uuid
@@ -137,8 +137,8 @@ def simulate_user_answers(num_users=10, num_questions=20):
     return user_dict
 
 
-# fake_users = simulate_user_answers(2)
-# store_users(fake_users)
+fake_users = simulate_user_answers(5)
+store_users(fake_users)
 
 
 def generate_survey_paragraph(survey):
