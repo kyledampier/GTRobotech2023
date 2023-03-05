@@ -6,7 +6,7 @@ import io
 from functions import *
 from fastapi import Response, Request
 from starlette.middleware.cors import CORSMiddleware
-import openai
+# import openai
 
 app = FastAPI()
 
@@ -19,6 +19,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# NEED OPENAI API KEY
 
 @app.get("/")
 def index():
@@ -47,7 +49,7 @@ async def begin_chatbot(request: Request):
 async def talk_to_bot(request: Request):
     #* given a user's form data,
     user_data = await request.json()
-    messages = start_chatbot(preprompt)
+    messages = get_completion(user_data)
     return messages
 
 
