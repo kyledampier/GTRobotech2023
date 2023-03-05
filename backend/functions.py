@@ -6,6 +6,9 @@ import os
 from PIL import Image
 import json
 import openai
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
 openai.api_key = "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"
 
@@ -39,14 +42,25 @@ def create_profile():
     return '/' + '/'.join([animal_directory, animal_file]), username
 
 
+def generate_dummy_value(user_data):
+    uid = str(uuid.uuid4())
+    data = {"form_data": [6, 2, 7, 5, 4, 5, 2, 7, 4, 6, 4, 3, 2, 6, 1, 5, 4, 6, 3, 7], "available_to_chat": 1}
+    user_dict = {uid: data}
+    with open("user_db.json", "w") as fp:
+        json.dump(user_dict, fp)
+    update_form_data(user_data)
+    print("Fixed empty database")
+
+
 def update_form_data(user_data):
     user_dict = get_available_partners()
     if not user_dict:
-        return "Error reading database"
-    uid = user_data["uid"]
-    answers = process_form_json(user_data)
-    user_dict[uid] = {"form_data": answers.tolist(), "available_to_chat": 1}
-    store_users(user_dict)
+        generate_dummy_value(user_data)
+    else:
+        uid = user_data["uid"]
+        answers = process_form_json(user_data)
+        user_dict[uid] = {"form_data": answers.tolist(), "available_to_chat": 1}
+        store_users(user_dict)
 
 
 def store_users(user_dict):
@@ -62,7 +76,7 @@ def get_available_partners():
         return user_dict
 
     except Exception:
-        print("Error reading database")
+        print("Error reading database or empty")
         return None
 
 # def get_similar_questions(uid):
@@ -184,6 +198,19 @@ def get_completion(user_data):
     messages.append(completion['message'])
     return messages
 
+
+def get_database():
+    cred = credentials.Certificate("mindfulChat.json")
+    app = firebase_admin.initialize_app(cred)
+    db = firestore.client()
+    users_ref = db.collection(u'users')
+    docs = users_ref.stream()
+    for doc in docs:
+        newJson = {"uid": doc.id}
+        survey = doc.to_dict()['survey']
+        newJson['survey'] = survey
+        update_form_data(newJson)
+    
 
 # fake_users = simulate_user_answers(2)
 # store_users(fake_users)
