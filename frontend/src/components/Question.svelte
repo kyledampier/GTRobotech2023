@@ -31,7 +31,9 @@
   });
 
   onMount(() => {
-    sendData();
+    if (localStorage.getItem("uid") !== null) {
+        goto("/message");
+    }
   });
 
   async function sendData() {
@@ -40,6 +42,7 @@
     });
 
     uid = newUserDoc.id;
+    localStorage.setItem("uid", uid);
 
     const res = await fetch(path + "submit_form", {
       method: "POST",
@@ -68,21 +71,21 @@
     } else {
       progress.set(100);
       sendData();
-      // goto('/message');
+      goto('/message');
     }
   }
 </script>
 
 <div class="survey-item">
     <div class="container">
-        <p>{index+1} |</p>
+        <p>{index + 1} |</p>
         <!-- <h1>{question}</h1> -->
         <TitleAnimated bind:val={index} titles={questions} />
 
     </div>
     
     <div class="form">
-        <div class="scale" style="padding-right: 0px;">
+        <div class="scale" style="justify-content: right;">
             {#if scale==="change"}
                 <p>No change</p>
             {:else if scale==="never"}
@@ -219,7 +222,7 @@
         align-items: center;
         justify-content: center;
         height: 25vh;
-        width: 500vw;
+        width: 100vw;
         gap: 1em;
     }
     progress {
