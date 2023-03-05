@@ -2,16 +2,16 @@
 <header>
     <img style="padding-left:30px" width="150px" height="150px" src="./static/logo_white.png" alt="logo">
     <a href="/questions">
-        <p><b>Start Networking</b></p>
+        <p><b>Start Conversing</b></p>
         <img class="arrow" width=32px height=32px src="https://cdn-icons-png.flaticon.com/512/32/32213.png" alt="arrow">
     </a>
 </header>
 
 <div>
-    <h1>Welcome to The Neural Network</h1>
+    <h1>Welcome to MindMate</h1>
     <div class="horizontal">
         <div>
-            <p>The Neural Network is a safe space that reminds you that you are not alone; where you can feel comfortable and supported, even during difficult times. It's a virtual space where you can express yourself freely without fear of judgment, criticism, or discrimination.</p>
+            <p>MindMate is a safe space that reminds you that you are not alone; where you can feel comfortable and supported, even during difficult times. It's a virtual space where you can express yourself freely without fear of judgment, criticism, or discrimination.</p>
             <p>This safe space is designed to provide a sense of community and belonging, where individuals can come together to share their experiences, thoughts, and emotions anonymously without feeling isolated or disconnected. It's a place where you can find others who have been through similar struggles and can offer support and understanding.</p>
             <p>It's a reminder that you are not alone in your struggles and that there are others who care about you and are ready to support you on your journey.</p>
         </div>

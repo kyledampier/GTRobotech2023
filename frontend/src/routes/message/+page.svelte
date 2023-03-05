@@ -37,7 +37,6 @@
     uid = selectedChat;
     selectedChat = tmp;
   }
-  // switchUsers();
 
   let matches: Match[] = [];
 
