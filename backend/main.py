@@ -22,6 +22,7 @@ app.add_middleware(
 
 # NEED OPENAI API KEY
 
+
 @app.get("/")
 def index():
     return {"Hello": "World"}
@@ -37,18 +38,21 @@ async def update_user_data(request: Request):
     # * given a user's form data,
     user_data = await request.json()
     update_form_data(user_data)
+    get_database()
 
-@app.get("/start_chatbot")
+
+@app.post("/start_chatbot")
 async def begin_chatbot(request: Request):
-    #* given a user's form data,
+    # * given a user's form data,
     user_data = await request.json()
     preprompt = generate_survey_paragraph(user_data['survey'])
     messages = start_chatbot(preprompt)
     return messages
 
-@app.get("/chat_with_bot")
+
+@app.post("/chat_with_bot")
 async def talk_to_bot(request: Request):
-    #* given a user's form data,
+    # * given a user's form data,
     user_data = await request.json()
     messages = get_completion(user_data)
     return messages

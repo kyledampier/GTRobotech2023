@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { uid } from "$lib/example_messages.json";
   import type { Message } from "../types/Message";
   import FoundAnonymousChat from "../components/FoundAnonymousChat.svelte";
 
   export let container: HTMLDivElement;
-  export let messages: Message[] = [];
+  export let messages: Message[];
 </script>
 
 <div class="expand" id="msgDisplay" bind:this={container}>

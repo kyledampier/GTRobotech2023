@@ -6,11 +6,15 @@ import os
 from PIL import Image
 import json
 import openai
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
 openai.api_key = "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"
 
 word_generator = RandomWord()
 animal_directory = os.path.join("pfps")
+
 
 def make_uuid():
     uid = str(uuid.uuid4())
@@ -35,17 +39,28 @@ def create_profile():
     # user_image = base64.encodebytes(user_image).decode('utf-8')
     #username = f"{adj.capitalize()} {animal_file[:-4].lower().capitalize()}"
 
-    return animal_directory + animal_file, username
+    return '/' + '/'.join([animal_directory, animal_file]), username
+
+
+def generate_dummy_value(user_data):
+    uid = str(uuid.uuid4())
+    data = {"form_data": [6, 2, 7, 5, 4, 5, 2, 7, 4, 6, 4, 3, 2, 6, 1, 5, 4, 6, 3, 7], "available_to_chat": 1}
+    user_dict = {uid: data}
+    with open("user_db.json", "w") as fp:
+        json.dump(user_dict, fp)
+    update_form_data(user_data)
+    print("Fixed empty database")
 
 
 def update_form_data(user_data):
     user_dict = get_available_partners()
     if not user_dict:
-        return "Error reading database"
-    uid = user_data["uid"]
-    answers = process_form_json(user_data)
-    user_dict[uid] = {"form_data": answers.tolist(), "available_to_chat": 1}
-    store_users(user_dict)
+        generate_dummy_value(user_data)
+    else:
+        uid = user_data["uid"]
+        answers = process_form_json(user_data)
+        user_dict[uid] = {"form_data": answers.tolist(), "available_to_chat": 1}
+        store_users(user_dict)
 
 
 def store_users(user_dict):
@@ -61,7 +76,7 @@ def get_available_partners():
         return user_dict
 
     except Exception:
-        print("Error reading database")
+        print("Error reading database or empty")
         return None
 
 
@@ -135,8 +150,8 @@ def simulate_user_answers(num_users=10, num_questions=20):
     return user_dict
 
 
-fake_users = simulate_user_answers(5)
-store_users(fake_users)
+# fake_users = simulate_user_answers(5)
+# store_users(fake_users)
 
 
 def generate_survey_paragraph(survey):
@@ -153,16 +168,18 @@ def generate_survey_paragraph(survey):
 
     for item in survey:
         paragraph += "Question: " + item["question"] + "\n"
-        paragraph += "Answer: " + language_scale[item["answer"]] + "\n"
-
+        paragraph += "Answer: " + item['scale'] + "\n"
+    print(paragraph)
     return paragraph
 
 
 def start_chatbot(survey_pararaph):
     # create a completion
-    messages = {
+    messages = [{
         "role": "system",
-        "content": f"You are a mental health and wellness assistant, designed to interpret and respond to a completed mental health questionnaire. Use the context of these answers to better understand and empathize with your patient. You are allowed to imitate human emotions for the sake of empathizing with who you speak to. Be polite, but curious with those you assist. Survey: {survey_pararaph}"}
+        "content": f"You are a mental health and wellness assistant, designed to interpret and respond to a completed mental health questionnaire. Use the context of these answers to better understand and empathize with your patient. You are allowed to imitate human emotions for the sake of empathizing with who you speak to. Be polite, but curious with those you assist. Survey: {survey_pararaph}"},
+        {"role": "assistant", "content": "As an AI mental health and wellness assistant, I do not have the capacity to feel emotions, but I am here to support you. Would you like to talk about how you are feeling?"}]
+
     return messages
 
 
@@ -178,3 +195,20 @@ def get_completion(user_data):
     print(messages, completion)
     messages.append(completion['message'])
     return messages
+
+
+def get_database():
+    cred = credentials.Certificate("mindfulChat.json")
+    app = firebase_admin.initialize_app(cred)
+    db = firestore.client()
+    users_ref = db.collection(u'users')
+    docs = users_ref.stream()
+    for doc in docs:
+        newJson = {"uid": doc.id}
+        survey = doc.to_dict()['survey']
+        newJson['survey'] = survey
+        update_form_data(newJson)
+
+
+# fake_users = simulate_user_answers(2)
+# store_users(fake_users)
