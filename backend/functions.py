@@ -17,6 +17,8 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 word_generator = RandomWord()
 animal_directory = os.path.join("pfps")
 
+cred = credentials.Certificate("mindfulChat.json")
+app = firebase_admin.initialize_app(cred)
 
 def make_uuid():
     uid = str(uuid.uuid4())
@@ -200,8 +202,6 @@ def get_completion(user_data):
 
 
 def get_database():
-    cred = credentials.Certificate("mindfulChat.json")
-    app = firebase_admin.initialize_app(cred)
     db = firestore.client()
     users_ref = db.collection(u'users')
     docs = users_ref.stream()
